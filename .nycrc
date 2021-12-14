@@ -1,0 +1,18 @@
+{
+    "all": true,
+    "reporter": [
+        "text",
+        "text-summary"
+    ],
+    "include": [
+        "src/impl/*.ts"
+    ],
+    "exclude": [
+        "src/app.local.ts",
+        "src/routes/*",
+        "src/interfaces/*",
+        "src/utils/*",
+        "src/factories/*"
+    ],
+    "lines": 80
+}
