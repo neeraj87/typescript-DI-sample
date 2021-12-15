@@ -4,6 +4,8 @@ import TYPES from "../utils/types";
 import StudentServiceInterface from "../interfaces/student-service-interface";
 import AddressServiceInterface from "../interfaces/address-service-interface";
 
+import { Student } from "../db-models/Student";
+
 @injectable()
 export class StudentService implements StudentServiceInterface {
     constructor(
@@ -15,9 +17,12 @@ export class StudentService implements StudentServiceInterface {
     /**
      * getStudentProfile
      */
-    public async getStudentProfile(id: string): Promise<any> {
+    public async getStudentProfile(id: number): Promise<any> {
         let addresses: any[] = await this.addressService.getStudentAddress(id);
-        return {id: "1234", name: "Neeraj Jadhav", addresses};
+        let student: any = await Student.findByPk(id, {raw: true});
+        
+        console.log('this line is covered');
+        return {student, addresses};
     }
 
     /**
@@ -30,14 +35,14 @@ export class StudentService implements StudentServiceInterface {
     /**
      * updateStudent
      */
-     public async updateStudent(student: any): Promise<any> {
+    public async updateStudent(student: any): Promise<any> {
         
     }
 
     /**
      * deleteStudent
      */
-     public async deleteStudent(id: string): Promise<any> {
+    public async deleteStudent(id: number): Promise<any> {
         
     }
 }

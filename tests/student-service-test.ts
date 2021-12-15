@@ -25,13 +25,17 @@ describe("Student Service", function() {
 
         //let response = 
         let getStudentProfileMock = {
-            getStudentProfile: async (id: string) => {
+            getStudentProfile: async (id: number) => {
                 return {
                     status: "success",
                     message: "Welcome to API Service",
                     student: {
-                        id: "1234",
-                        name: "Neeraj Jadhav",
+                        student: {
+                            id: 1,
+                            first_name: "Neeraj",
+                            last_name: "Jadhav",
+                            dateOfBirth: "1987-08-28"
+                        },
                         addresses: [
                             {
                                 streetAddress: "126",
@@ -45,7 +49,7 @@ describe("Student Service", function() {
             },
             createStudent: async (student: any) => {return true},
             updateStudent: async (student: any) => {return true},
-            deleteStudent: async (id: string) => {return true}
+            deleteStudent: async (id: number) => {return true}
         }
 
         container.unbind(TYPES.StudentService);
@@ -56,8 +60,12 @@ describe("Student Service", function() {
             status: "success",
             message: "Welcome to API Service",
             student: {
-                id: "1234",
-                name: "Neeraj Jadhav",
+                student: {
+                    id: 1,
+                    first_name: "Neeraj",
+                    last_name: "Jadhav",
+                    dateOfBirth: "1987-08-28"
+                },
                 addresses: [
                     {
                         streetAddress: "126",
@@ -69,7 +77,7 @@ describe("Student Service", function() {
             }
         };
 
-        let incomingResult = await result.getStudentProfile("1234");
+        let incomingResult = await result.getStudentProfile(1);
         expect(incomingResult).to.deep.equal(mockResponse);
     });
 });

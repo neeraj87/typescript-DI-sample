@@ -1,6 +1,6 @@
 export default interface StudentServiceInterface {
-    getStudentProfile(id: string): Promise<any>;
+    getStudentProfile(id: number): Promise<any>;
     createStudent(student: any): Promise<any>;
     updateStudent(student: any): Promise<any>;
-    deleteStudent(id: string): Promise<any>;
+    deleteStudent(id: number): Promise<any>;
 }

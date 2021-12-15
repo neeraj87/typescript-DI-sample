@@ -10,7 +10,7 @@ export class AddressService implements AddressServiceInterface {
     /**
      * getStudentAddress
      */
-    public async getStudentAddress(id: string): Promise<any> {
+    public async getStudentAddress(id: number): Promise<any> {
         return await [
             {
                 "streetAddress": "126",
@@ -50,7 +50,7 @@ export class AddressService implements AddressServiceInterface {
     /**
      * deleteStudentAddress
      */
-     public async deleteStudentAddress(id: string): Promise<any> {
+     public async deleteStudentAddress(id: number): Promise<any> {
         
     }
 }
