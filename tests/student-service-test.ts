@@ -4,17 +4,34 @@ import { expect } from 'chai';
 import { Container } from "inversify";
 
 import TYPES from "../src/utils/types";
+import mockStudentDbModel from "./db-mocks/student-db-mock";
 import { ContainerFactory } from '../src/factories/container-factory';
 import StudentServiceInterface from "../src/interfaces/student-service-interface";
+import AddressServiceInterface from "../src/interfaces/address-service-interface";
 
 describe("Student Service", function() {
-    let studentService;
+    //add mock address service 
+    let addressServiceMock = {
+        getStudentAddress: async (id: number) => {
+            return [
+                {
+                    streetAddress: "126",
+                    city: "San Jone",
+                    state: "CA",
+                    postalCode: "394221"
+                }
+            ]
+        },
+        createStudentAddress: async (address: any) => {return true},
+        updateStudentAddress: async (address: any) => {return true},
+        deleteStudentAddress: async (id: number) => {return true},
+    }
+
     let container: Container;
 
     beforeEach(() => {
         container = ContainerFactory.getContainer();
         container.snapshot();
-        //studentService = container.get<StudentServiceInterface>(TYPES.StudentService)
     });
 
     this.afterEach(() => {
@@ -22,62 +39,104 @@ describe("Student Service", function() {
     })
 
     it("should return the student profile record", async function() {
+        //unbind address service and bind mock address service
+        container.unbind(TYPES.AddressService);
+        container.bind<AddressServiceInterface>(TYPES.AddressService).toConstantValue(addressServiceMock);
 
-        //let response = 
-        let getStudentProfileMock = {
-            getStudentProfile: async (id: number) => {
-                return {
-                    status: "success",
-                    message: "Welcome to API Service",
-                    student: {
-                        student: {
-                            id: 1,
-                            first_name: "Neeraj",
-                            last_name: "Jadhav",
-                            dateOfBirth: "1987-08-28"
-                        },
-                        addresses: [
-                            {
-                                streetAddress: "126",
-                                city: "San Jone",
-                                state: "CA",
-                                postalCode: "394221"
-                            }
-                        ]
-                    }
-                };
-            },
-            createStudent: async (student: any) => {return true},
-            updateStudent: async (student: any) => {return true},
-            deleteStudent: async (id: number) => {return true}
-        }
+        //unbind student db model and bind mock student db model
+        container.unbind(TYPES.StudentDbModel);
+        container.bind(TYPES.StudentDbModel).toConstantValue(mockStudentDbModel);
 
-        container.unbind(TYPES.StudentService);
-        container.bind<StudentServiceInterface>(TYPES.StudentService).toConstantValue(getStudentProfileMock);
-
-        let result = container.get<StudentServiceInterface>(TYPES.StudentService);
+        let studentService = container.get<StudentServiceInterface>(TYPES.StudentService);
         let mockResponse: any = {
-            status: "success",
-            message: "Welcome to API Service",
             student: {
-                student: {
-                    id: 1,
-                    first_name: "Neeraj",
-                    last_name: "Jadhav",
-                    dateOfBirth: "1987-08-28"
-                },
-                addresses: [
-                    {
-                        streetAddress: "126",
-                        city: "San Jone",
-                        state: "CA",
-                        postalCode: "394221"
-                    }
-                ]
+                id: 1,
+                first_name: "Neeraj",
+                last_name: "Jadhav",
+                dateOfBirth: "1987-08-28"
+            },
+            addresses: [
+                {
+                    streetAddress: "126",
+                    city: "San Jone",
+                    state: "CA",
+                    postalCode: "394221"
+                }
+            ]
+        };
+
+        let incomingResult = await studentService.getStudentProfile(1);
+        expect(incomingResult).to.deep.equal(mockResponse);
+    });
+
+    it("should throw an error if student record is not found", async function() {
+        //unbind address service and bind mock address service
+        container.unbind(TYPES.AddressService);
+        container.bind<AddressServiceInterface>(TYPES.AddressService).toConstantValue(addressServiceMock);
+
+        let mockStudentDbModelToThrowException = {
+            findByPk: (pk: any) => {
+                throw new Error("Student not found");
             }
         };
 
-        let incomingResult = await result.getStudentProfile(1);
+        //unbind student db model and bind mock student db model
+        container.unbind(TYPES.StudentDbModel);
+        container.bind(TYPES.StudentDbModel).toConstantValue(mockStudentDbModelToThrowException);
+
+        let studentService = container.get<StudentServiceInterface>(TYPES.StudentService);
+        let incomingResult = await studentService.getStudentProfile(1);
+        expect(incomingResult).to.deep.equal(null);
+    });
+
+    it("should create a new student", async function() {
+        //unbind address service and bind mock address service
+        container.unbind(TYPES.AddressService);
+        container.bind<AddressServiceInterface>(TYPES.AddressService).toConstantValue(addressServiceMock);
+
+        //unbind student db model and bind mock student db model
+        container.unbind(TYPES.StudentDbModel);
+        container.bind(TYPES.StudentDbModel).toConstantValue(mockStudentDbModel);
+
+        let studentService = container.get<StudentServiceInterface>(TYPES.StudentService);
+        let mockResponse: any = {
+            id: 1,
+            first_name: "Neeraj",
+            last_name: "Jadhav",
+            dateOfBirth: "1987-08-28"
+        };
+
+        let incomingResult = await studentService.createStudent({first_name: "Neeraj", last_name: "Jadhav", dateOfBirth: "1987-08-28"});
         expect(incomingResult).to.deep.equal(mockResponse);
+    });
+
+    it("should update a student", async function() {
+        //unbind address service and bind mock address service
+        container.unbind(TYPES.AddressService);
+        container.bind<AddressServiceInterface>(TYPES.AddressService).toConstantValue(addressServiceMock);
+
+        //unbind student db model and bind mock student db model
+        container.unbind(TYPES.StudentDbModel);
+        container.bind(TYPES.StudentDbModel).toConstantValue(mockStudentDbModel);
+
+        let studentService = container.get<StudentServiceInterface>(TYPES.StudentService);
+        
+        let incomingResult = await studentService.updateStudent(1, {first_name: "Neeraj", last_name: "Jadhav", dateOfBirth: "1987-08-28"});
+        expect(incomingResult).to.equal(1);
+    });
+
+    it("should delete a student", async function() {
+        //unbind address service and bind mock address service
+        container.unbind(TYPES.AddressService);
+        container.bind<AddressServiceInterface>(TYPES.AddressService).toConstantValue(addressServiceMock);
+
+        //unbind student db model and bind mock student db model
+        container.unbind(TYPES.StudentDbModel);
+        container.bind(TYPES.StudentDbModel).toConstantValue(mockStudentDbModel);
+
+        let studentService = container.get<StudentServiceInterface>(TYPES.StudentService);
+        
+        let incomingResult = await studentService.deleteStudent(1);
+        expect(incomingResult).to.equal(1);
     });
 });

@@ -13,11 +13,32 @@ DbConnectionService.connect();
 
 app.use(express.json());
 
-app.get('/', async (req: Request, res: Response): Promise<any> => {
+app.get('/:id', async (req: Request, res: Response): Promise<any> => {
     const container = ContainerFactory.getContainer();
     const studentService = container.get<StudentServiceInterface>(TYPES.StudentService);
-    let student = await studentService.getStudentProfile(1);
-    return res.json({ status: "success", message: "Welcome to API Service", student });
+    let result = await studentService.getStudentProfile(+req.params.id);
+    return res.json({ status: "success", message: "Welcome to API Service", result });
+});
+
+app.post('/', async (req: Request, res: Response): Promise<any> => {
+    const container = ContainerFactory.getContainer();
+    const studentService = container.get<StudentServiceInterface>(TYPES.StudentService);
+    let result = await studentService.createStudent(req.body)
+    return res.json({ status: "success", result });
+});
+
+app.patch('/:id', async (req: Request, res: Response): Promise<any> => {
+    const container = ContainerFactory.getContainer();
+    const studentService = container.get<StudentServiceInterface>(TYPES.StudentService);
+    let result = await studentService.updateStudent(+req.params.id, req.body);
+    return res.json({ status: "success", result });
+});
+
+app.delete('/:id', async (req: Request, res: Response): Promise<any> => {
+    const container = ContainerFactory.getContainer();
+    const studentService = container.get<StudentServiceInterface>(TYPES.StudentService);
+    let result = await studentService.deleteStudent(+req.params.id)
+    return res.json({ status: "success", result });
 });
 
 app.use((req: Request, res: Response, next: NextFunction) => {

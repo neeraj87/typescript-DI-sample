@@ -12,6 +12,8 @@ import AddressServiceInterface from "../interfaces/address-service-interface";
 import { StudentService } from "../impl/student-service";
 import { AddressService } from "../impl/address-service";
 
+import { Student } from "../db-models/Student";
+
 export class ContainerFactory {
 
     public static getContainer(): Container {
@@ -25,5 +27,6 @@ export class ContainerFactory {
 
         container.bind<StudentServiceInterface>(TYPES.StudentService).to(StudentService);
         container.bind<AddressServiceInterface>(TYPES.AddressService).to(AddressService);
+        container.bind(TYPES.StudentDbModel).toConstantValue(Student);
     }
 }
