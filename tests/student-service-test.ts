@@ -36,7 +36,7 @@ describe("Student Service", function() {
 
     this.afterEach(() => {
         container.restore();
-    })
+    });
 
     it("should return the student profile record", async function() {
         //unbind address service and bind mock address service
@@ -86,7 +86,7 @@ describe("Student Service", function() {
 
         let studentService = container.get<StudentServiceInterface>(TYPES.StudentService);
         let incomingResult = await studentService.getStudentProfile(1);
-        expect(incomingResult).to.deep.equal(null);
+        expect(incomingResult).to.equal(null);
     });
 
     it("should create a new student", async function() {

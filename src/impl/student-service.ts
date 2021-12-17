@@ -4,8 +4,6 @@ import TYPES from "../utils/types";
 import StudentServiceInterface from "../interfaces/student-service-interface";
 import AddressServiceInterface from "../interfaces/address-service-interface";
 
-//import { Student } from "../db-models/Student";
-
 @injectable()
 export class StudentService implements StudentServiceInterface {
     constructor(

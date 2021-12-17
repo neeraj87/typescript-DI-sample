@@ -6,6 +6,7 @@ import TYPES from "./utils/types";
 import { ContainerFactory } from './factories/container-factory';
 import DbConnectionService from './services/db-connection-service';
 import StudentServiceInterface from "./interfaces/student-service-interface";
+import WeatherAPIServiceInterface from "./interfaces/weather-api-service-interface";
 
 const app: Application = express();
 
@@ -13,32 +14,39 @@ DbConnectionService.connect();
 
 app.use(express.json());
 
-app.get('/:id', async (req: Request, res: Response): Promise<any> => {
+app.get('/student/:id', async (req: Request, res: Response): Promise<any> => {
     const container = ContainerFactory.getContainer();
     const studentService = container.get<StudentServiceInterface>(TYPES.StudentService);
     let result = await studentService.getStudentProfile(+req.params.id);
-    return res.json({ status: "success", message: "Welcome to API Service", result });
+    return res.json({ status: "success", result });
 });
 
-app.post('/', async (req: Request, res: Response): Promise<any> => {
+app.post('/student', async (req: Request, res: Response): Promise<any> => {
     const container = ContainerFactory.getContainer();
     const studentService = container.get<StudentServiceInterface>(TYPES.StudentService);
     let result = await studentService.createStudent(req.body)
     return res.json({ status: "success", result });
 });
 
-app.patch('/:id', async (req: Request, res: Response): Promise<any> => {
+app.patch('/student/:id', async (req: Request, res: Response): Promise<any> => {
     const container = ContainerFactory.getContainer();
     const studentService = container.get<StudentServiceInterface>(TYPES.StudentService);
     let result = await studentService.updateStudent(+req.params.id, req.body);
     return res.json({ status: "success", result });
 });
 
-app.delete('/:id', async (req: Request, res: Response): Promise<any> => {
+app.delete('/student/:id', async (req: Request, res: Response): Promise<any> => {
     const container = ContainerFactory.getContainer();
     const studentService = container.get<StudentServiceInterface>(TYPES.StudentService);
     let result = await studentService.deleteStudent(+req.params.id)
     return res.json({ status: "success", result });
+});
+
+app.get('/weather', async (req: Request, res: Response): Promise<any> => {
+    const container = ContainerFactory.getContainer();
+    const weatherService = container.get<WeatherAPIServiceInterface>(TYPES.WeatherService);
+    let result = await weatherService.getCurrentWeather("London");
+    return res.send({ status: "success", result });
 });
 
 app.use((req: Request, res: Response, next: NextFunction) => {
