@@ -7,6 +7,28 @@ let mockStudentDbModel = {
             dateOfBirth: "1987-08-28"
         }
     },
+    findAll: (item: any) => {
+        return [
+            {
+                id: 1,
+                first_name: "Neeraj",
+                last_name: "Jadhav",
+                dateOfBirth: "1987-08-28"
+            },
+            {
+                id: 2,
+                first_name: "Neeraj",
+                last_name: "Jadhav",
+                dateOfBirth: "1987-08-28"
+            },
+            {
+                id: 3,
+                first_name: "Neeraj",
+                last_name: "Jadhav",
+                dateOfBirth: "1987-08-28"
+            }
+        ]
+    },
     create: (item: any) => {
         return {
             id: 1,

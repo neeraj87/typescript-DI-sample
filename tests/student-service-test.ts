@@ -48,7 +48,7 @@ describe("Student Service", function() {
         container.bind(TYPES.StudentDbModel).toConstantValue(mockStudentDbModel);
 
         let studentService = container.get<StudentServiceInterface>(TYPES.StudentService);
-        let mockResponse: any = {
+        let expectedResponse: any = {
             student: {
                 id: 1,
                 first_name: "Neeraj",
@@ -66,7 +66,7 @@ describe("Student Service", function() {
         };
 
         let incomingResult = await studentService.getStudentProfile(1);
-        expect(incomingResult).to.deep.equal(mockResponse);
+        expect(incomingResult).to.deep.equal(expectedResponse);
     });
 
     it("should throw an error if student record is not found", async function() {
