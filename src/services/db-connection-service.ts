@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
-//import { TypeformResponse } from '../models/TypeformResponse';
 import { Student } from "../db-models/Student";
+import { Address } from "../db-models/Address";
 
 import 'mysql2';
 
@@ -25,11 +25,10 @@ export default class DbConnectionService {
                     timestamps: false
                 },
                 models: [
-                    Student
+                    Student,
+                    Address
                 ]
             });
-
-            //this.instance.models.TypeformResponse.removeAttribute('id');
         }
         return this.instance
     }

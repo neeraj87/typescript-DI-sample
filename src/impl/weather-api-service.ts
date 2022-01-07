@@ -3,6 +3,7 @@ import { inject, injectable } from "inversify";
 import TYPES from "../utils/types";
 import WeatherAPIServiceInterface from "../interfaces/weather-api-service-interface";
 import AxiosServiceInterface from "../interfaces/axios-service-interface";
+import axios from "axios";
 
 @injectable()
 export class WeatherAPIService implements WeatherAPIServiceInterface {

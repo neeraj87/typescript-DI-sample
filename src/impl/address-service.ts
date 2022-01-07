@@ -1,9 +1,13 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
+import TYPES from "../utils/types";
+
 import AddressServiceInterface from "../interfaces/address-service-interface";
 
 @injectable()
 export class AddressService implements AddressServiceInterface {
-    constructor() {
+    constructor(
+        @inject(TYPES.AddressDbModel) public readonly addressDbModel: any
+    ) {
         
     }
 
@@ -11,26 +15,12 @@ export class AddressService implements AddressServiceInterface {
      * getStudentAddress
      */
     public async getStudentAddress(id: number): Promise<any> {
-        return await [
-            {
-                "streetAddress": "126",
-                "city": "San Jone",
-                "state": "CA",
-                "postalCode": "394221"
+        return await this.addressDbModel.findAll({
+            where: {
+                studentId: id
             },
-            {
-                "streetAddress": "126",
-                "city": "San Jone",
-                "state": "CA",
-                "postalCode": "394221"
-            },
-            {
-                "streetAddress": "126",
-                "city": "San Jone",
-                "state": "CA",
-                "postalCode": "394221"
-            }
-        ]
+            raw: true
+        });
     }
 
     /**

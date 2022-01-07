@@ -45,7 +45,8 @@ app.delete('/student/:id', async (req: Request, res: Response): Promise<any> => 
 app.get('/weather', async (req: Request, res: Response): Promise<any> => {
     const container = ContainerFactory.getContainer();
     const weatherService = container.get<WeatherAPIServiceInterface>(TYPES.WeatherService);
-    let result = await weatherService.getCurrentWeather("London");
+    let city = req.query.city;
+    let result = await weatherService.getCurrentWeather(city);
     return res.send({ status: "success", result });
 });
 
@@ -62,8 +63,6 @@ app.use((error: { message: string; status: number }, req: Request, res: Response
     });
     next();
 });
-
-
 
 const PORT: any = process.env.PORT || 3000;
 

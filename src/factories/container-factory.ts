@@ -16,12 +16,13 @@ import { AddressService } from "../impl/address-service";
 import { WeatherAPIService } from "../impl/weather-api-service";
 import AxiosService from "../services/axios-service";
 
+//import db models
 import { Student } from "../db-models/Student";
+import { Address } from "../db-models/Address";
 
 export class ContainerFactory {
 
     public static getContainer(): Container {
-        //TODO: what is skipBaseClassChecks?
         let container = new Container({ skipBaseClassChecks: true });
         ContainerFactory.configureServices(container);
         return container;
@@ -34,5 +35,6 @@ export class ContainerFactory {
 
         container.bind<AxiosServiceInterface>(TYPES.AxiosService).to(AxiosService);
         container.bind(TYPES.StudentDbModel).toConstantValue(Student);
+        container.bind(TYPES.AddressDbModel).toConstantValue(Address);
     }
 }

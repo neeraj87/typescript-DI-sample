@@ -15,10 +15,12 @@ describe("Student Service", function() {
         getStudentAddress: async (id: number) => {
             return [
                 {
-                    streetAddress: "126",
+                    id: 23,
+                    street: "126",
                     city: "San Jone",
                     state: "CA",
-                    postalCode: "394221"
+                    zip_postal_code: "394221",
+                    studentId: 1
                 }
             ]
         },
@@ -57,10 +59,12 @@ describe("Student Service", function() {
             },
             addresses: [
                 {
-                    streetAddress: "126",
+                    id: 23,
+                    street: "126",
                     city: "San Jone",
                     state: "CA",
-                    postalCode: "394221"
+                    zip_postal_code: "394221",
+                    studentId: 1
                 }
             ]
         };
